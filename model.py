@@ -27,8 +27,10 @@ with open('data/driving_log.csv') as csvfile:
 
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
-def generator(samples, batch_size=32):
+def generator(samples, batch_size=32, augmentation=0):
     num_samples = len(samples)
+    if augmentation == 1:
+        batch_size = int(batch_size/2)
     while 1: # Loop forever so the generator never terminates
         shuffle(samples)
         for offset in range(0, num_samples, batch_size):
@@ -42,6 +44,10 @@ def generator(samples, batch_size=32):
                 center_angle = float(batch_sample[3])
                 images.append(center_image)
                 angles.append(center_angle)
+                # data augmentation added flipped images
+                if augmentation == 1:
+                    images.append(cv2.flip(center_image, 1))
+                    angles.append(center_angle*-1.0)
 
             # trim image to only see section with road
             X_train = np.array(images)
@@ -49,8 +55,8 @@ def generator(samples, batch_size=32):
             yield shuffle(X_train, y_train)
 
 # compile and train the model using the generator function
-train_generator = generator(train_samples)
-validation_generator = generator(validation_samples)
+train_generator = generator(train_samples, augmentation=1)
+validation_generator = generator(validation_samples, augmentation=0)
 
 ch, row, col = 3, 90, 320  # Trimmed image format
 
@@ -75,7 +81,7 @@ model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam')
 checkpointer = ModelCheckpoint(filepath="models/model_{epoch:02d}-{val_loss:.2f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
-history_object = model.fit_generator(train_generator, steps_per_epoch=len(train_samples), epochs=2, callbacks=[checkpointer], validation_data=validation_generator, validation_steps=len(validation_samples))
+history_object = model.fit_generator(train_generator, steps_per_epoch=len(train_samples)*2, epochs=2, callbacks=[checkpointer], validation_data=validation_generator, validation_steps=len(validation_samples))
 model.save('model.h5')
 
 ### print the keys contained in the history object
