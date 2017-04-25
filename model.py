@@ -12,7 +12,7 @@ from keras.layers.pooling import MaxPooling2D
 from keras.optimizers import Adam
 from sklearn.utils import shuffle
 from keras.layers.normalization import BatchNormalization
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 
 import matplotlib
 matplotlib.use('Agg')
@@ -26,8 +26,16 @@ with open('data/driving_log.csv') as csvfile:
         samples.append(line)
 
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
+BATCH_SIZE = 32
+EPOCHS=2
 
-def generator(samples, batch_size=32, augmentation=0):
+def get_callbacks():
+    earlystop = EarlyStopping(monitor='val_loss', patience=10, verbose=0, mode='auto')
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, verbose=0, mode='auto', epsilon=0.0001, cooldown=0, min_lr=0)
+    checkpointer = ModelCheckpoint(filepath="models/model_{epoch:02d}-{val_loss:.2f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
+    return [earlystop, reduce_lr, checkpointer]
+
+def generator(samples, batch_size=BATCH_SIZE, augmentation=0):
     num_samples = len(samples)
     if augmentation == 1:
         batch_size = int(batch_size/2)
@@ -79,9 +87,10 @@ model.add(Dense(50, activation='elu'))
 model.add(Dense(10, activation='elu'))
 model.add(Dense(1))
 
-model.compile(loss='mse', optimizer='adam')
-checkpointer = ModelCheckpoint(filepath="models/model_{epoch:02d}-{val_loss:.2f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
-history_object = model.fit_generator(train_generator, steps_per_epoch=len(train_samples)*2, epochs=2, callbacks=[checkpointer], validation_data=validation_generator, validation_steps=len(validation_samples))
+adam = Adam(lr=0.0005, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.)
+model.compile(loss='mse', optimizer=adam)
+checkpointer = get_callbacks()
+history_object = model.fit_generator(train_generator, steps_per_epoch=(len(train_samples)*2)/BATCH_SIZE, epochs=EPOCHS, callbacks=checkpointer, validation_data=validation_generator, validation_steps=len(validation_samples))
 model.save('model.h5')
 
 ### print the keys contained in the history object
@@ -95,3 +104,4 @@ plt.ylabel('mean squared error loss')
 plt.xlabel('epoch')
 plt.legend(['training set', 'validation set'], loc='upper right')
 plt.savefig('imgs/loss.png')
+
