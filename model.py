@@ -2,7 +2,6 @@ import os
 import csv
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
@@ -13,6 +12,11 @@ from keras.layers.pooling import MaxPooling2D
 from keras.optimizers import Adam
 from sklearn.utils import shuffle
 from keras.layers.normalization import BatchNormalization
+from keras.callbacks import ModelCheckpoint
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 samples = []
 with open('data/driving_log.csv') as csvfile:
@@ -70,7 +74,8 @@ model.add(Dense(10, activation='elu'))
 model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam')
-history_object = model.fit_generator(train_generator, steps_per_epoch=len(train_samples), epochs=10, validation_data=validation_generator, validation_steps=len(validation_samples))
+checkpointer = ModelCheckpoint(filepath="models/model_{epoch:02d}-{val_loss:.2f}.h5", monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
+history_object = model.fit_generator(train_generator, steps_per_epoch=len(train_samples), epochs=2, callbacks=[checkpointer], validation_data=validation_generator, validation_steps=len(validation_samples))
 model.save('model.h5')
 
 ### print the keys contained in the history object
