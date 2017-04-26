@@ -1,3 +1,6 @@
+'''
+A Simple Script that training Convolutional Neural Networks.
+'''
 import os
 import csv
 import cv2
@@ -14,21 +17,22 @@ from sklearn.utils import shuffle
 from keras.layers.normalization import BatchNormalization
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 
+# for plot training loss on aws
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 samples = []
-with open('mydata/driving_log.csv') as csvfile, open('mydata2/driving_log.csv') as csvfile2:
-    for f in [csvfile, csvfile2]:
-        reader = csv.reader(f)
+for f in ['mydata', 'mydata2', 'mydata3']:
+    with open(f+'/driving_log.csv') as csvfile:
+        reader = csv.reader(csvfile)
         # fieldnames = next(reader)
         for line in reader:
             samples.append(line)
 
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 BATCH_SIZE = 32
-EPOCHS=2
+EPOCHS = 2
 
 def get_callbacks():
     earlystop = EarlyStopping(monitor='val_loss', patience=10, verbose=0, mode='auto')
@@ -38,6 +42,7 @@ def get_callbacks():
 
 def generator(samples, batch_size=BATCH_SIZE, augmentation=0):
     num_samples = len(samples)
+    # reduce batch_size to data augmentation
     if augmentation == 1:
         batch_size = int(batch_size/2)
     while 1: # Loop forever so the generator never terminates
@@ -54,7 +59,7 @@ def generator(samples, batch_size=BATCH_SIZE, augmentation=0):
                 center_angle = float(batch_sample[3])
                 images.append(center_image)
                 angles.append(center_angle)
-                # data augmentation added flipped images
+                # added flipped images to data augmentation
                 if augmentation == 1:
                     images.append(cv2.flip(center_image, 1))
                     angles.append(center_angle*-1.0)
@@ -76,6 +81,7 @@ model = Sequential()
 model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160, 320, 3)))
 model.add(MaxPooling2D(pool_size=(2,2), padding='valid'))
 
+# based on NVIDIA architecture
 model.add(Conv2D(24, (5, 5), padding='valid'))
 model.add(BatchNormalization())
 model.add(Activation('relu'))

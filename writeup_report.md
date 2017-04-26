@@ -1,9 +1,4 @@
 # **Behavioral Cloning**
-
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
 ---
 
 **Behavioral Cloning Project**
@@ -27,7 +22,7 @@ The goals / steps of this project are the following:
 [image7]: ./examples/placeholder_small.png "Flipped Image"
 
 ## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
+### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
 ---
 ### Files Submitted & Code Quality
@@ -38,7 +33,7 @@ My project includes the following files:
 * model.py containing the script to create and train the model
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network
-* writeup_report.md or writeup_report.pdf summarizing the results
+* writeup_report.md summarizing the results
 
 #### 2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing
@@ -58,7 +53,7 @@ My model consists of a convolution neural network with 5x5 3x3 filter sizes and 
 The model includes ELU layers (code line 20), and the input size is reduce to 1/4 (code line 18).
 
 #### 2. Attempts to reduce overfitting in the model
-The model contains Batch Normalization layers in order to reduce overfitting (model.py lines xx-xx).  When a loss score has stopped decrease, reduce the leaning rate.
+The model contains Batch Normalization layers in order to reduce overfitting (model.py lines xx-xx). When a loss score has stopped decrease, reduce the leaning rate.
 
 The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 59, 60). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
@@ -66,11 +61,11 @@ The model was trained and validated on different data sets to ensure that the mo
 
 The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
 
-####4. Appropriate training data
+#### 4. Appropriate training data
 
-Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road ...
+Training data was chosen to keep the vehicle driving on the road from center camera. For details about how I created the training data, see the next section.
+<!-- I used a combination of center lane driving, recovering from the left and right sides of the road ... -->
 
-For details about how I created the training data, see the next section.
 
 ### Model Architecture and Training Strategy
 
@@ -78,13 +73,11 @@ For details about how I created the training data, see the next section.
 
 The overall strategy for deriving a model architecture was to build model same as NVIDIA architecture and adjust the model to successfully drive.
 
-My first step was to use a convolution neural network model similar to the NVIDIA architecture. I thought this model might be appropriate because the car successfully drive around center of road until bridge.
+My first step was to build a convolution neural network model similar to the NVIDIA architecture.
+<!--I thought this model might be appropriate because the car successfully drive around center of road until bridge on the simulator.-->
+In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting.
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set.
-
-I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting.
-
-To combat the overfitting, I modified the model so that ...
+To combat the overfitting, I modified the model so that
 
 Then I ...
 
