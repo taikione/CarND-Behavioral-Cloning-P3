@@ -65,7 +65,7 @@ def generator(samples, batch_size=BATCH_SIZE, augmentation=0):
             yield shuffle(X_train, y_train)
 
 # compile and train the model using the generator function
-train_generator = generator(train_samples, augmentation=0)
+train_generator = generator(train_samples, augmentation=1)
 validation_generator = generator(validation_samples, augmentation=0)
 
 ch, row, col = 3, 90, 320  # Trimmed image format
@@ -114,7 +114,7 @@ model.add(Dense(1))
 adam = Adam(lr=0.0005, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.)
 model.compile(loss='mse', optimizer=adam)
 checkpointer = get_callbacks()
-history_object = model.fit_generator(train_generator, steps_per_epoch=len(train_samples)/BATCH_SIZE, epochs=EPOCHS, callbacks=checkpointer, validation_data=validation_generator, validation_steps=len(validation_samples))
+history_object = model.fit_generator(train_generator, steps_per_epoch=(len(train_samples)*2)/BATCH_SIZE, epochs=EPOCHS, callbacks=checkpointer, validation_data=validation_generator, validation_steps=len(validation_samples))
 model.save('model.h5')
 
 ### print the keys contained in the history object
