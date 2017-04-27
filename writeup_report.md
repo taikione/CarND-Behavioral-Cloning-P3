@@ -15,11 +15,11 @@ The goals / steps of this project are the following:
 
 [image1]: ./examples/placeholder.png "Model Visualization"
 [image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[recovery1]: ./examples/placeholder_small.png "Recovery Image"
+[recovery2]: ./examples/placeholder_small.png "Recovery Image"
+[recovery3]: ./examples/placeholder_small.png "Recovery Image"
+[normal]: ./examples/placeholder_small.png "Normal Image"
+[flipped]: ./examples/placeholder_small.png "Flipped Image"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -45,6 +45,7 @@ python drive.py model.h5
 
 The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
+<!--
 ### Model Architecture and Training Strategy
 
 #### 1. An appropriate model architecture has been employed
@@ -64,7 +65,8 @@ The model used an adam optimizer, so the learning rate was not tuned manually (m
 #### 4. Appropriate training data
 
 Training data was chosen to keep the vehicle driving on the road from center camera. For details about how I created the training data, see the next section.
-<!-- I used a combination of center lane driving, recovering from the left and right sides of the road ... -->
+I used a combination of center lane driving, recovering from the left and right sides of the road ...
+-->
 
 
 ### Model Architecture and Training Strategy
@@ -75,9 +77,9 @@ The overall strategy for deriving a model architecture was to build model same a
 
 My first step was to build a convolution neural network model similar to the NVIDIA architecture.
 <!--I thought this model might be appropriate because the car successfully drive around center of road until bridge on the simulator.-->
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting.
+In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the the model was overfitting In addition, I observed this model can't successfully drive in simulator.
 
-To combat the overfitting, I modified the model so that
+To successfully drive, I added the model to BatchNormalization Layer and pooling layer for reduce input size to 1/4 and another data.
 
 Then I ...
 
@@ -95,24 +97,22 @@ Here is a visualization of the architecture (note: visualizing the architecture 
 
 ####3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+To capture good driving behavior, I first recorded 5 laps on track one using center lane driving. Here is an example image of center lane driving:
 
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
+I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to behavior that back to center.
+These images show what a recovery looks like starting from right side of road to center:
 
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
+![alt text][recovery1]
+![alt text][recovery2]
+![alt text][recovery3]
 
-Then I repeated this process on track two in order to get more data points.
+To augment the data sat, I also flipped images and angles.
+For example, here is an image that has then been flipped:
 
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
+![alt text][normal]
+![alt text][flipped]
 
 After the collection process, I had X number of data points. I then preprocessed this data by ...
 
@@ -120,3 +120,4 @@ After the collection process, I had X number of data points. I then preprocessed
 I finally randomly shuffled the data set and put Y% of the data into a validation set.
 
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+

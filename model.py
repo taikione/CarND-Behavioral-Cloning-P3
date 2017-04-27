@@ -23,7 +23,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 samples = []
-for f in ['mydata', 'mydata2', 'mydata3']:
+for f in ['mydata', 'mydata2', 'mydata3', 'mydata4', 'mydata5']:
     with open(f+'/driving_log.csv') as csvfile:
         reader = csv.reader(csvfile)
         # fieldnames = next(reader)
@@ -32,7 +32,7 @@ for f in ['mydata', 'mydata2', 'mydata3']:
 
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 BATCH_SIZE = 32
-EPOCHS = 2
+EPOCHS = 10
 
 def get_callbacks():
     earlystop = EarlyStopping(monitor='val_loss', patience=10, verbose=0, mode='auto')
@@ -117,8 +117,8 @@ model.add(Activation('relu'))
 
 model.add(Dense(1))
 
-adam = Adam(lr=0.0005, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.)
-model.compile(loss='mse', optimizer=adam)
+#adam = Adam(lr=0.0005, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.)
+model.compile(loss='mse', optimizer='adam')
 checkpointer = get_callbacks()
 history_object = model.fit_generator(train_generator, steps_per_epoch=(len(train_samples)*2)/BATCH_SIZE, epochs=EPOCHS, callbacks=checkpointer, validation_data=validation_generator, validation_steps=len(validation_samples))
 model.save('model.h5')
