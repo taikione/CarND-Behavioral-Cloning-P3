@@ -30,8 +30,8 @@ def main():
     BATCH_SIZE = 32
     samples = []
 
-    #target = ['mydata'] + ['mydata' + str(x) for x in range(3, 8)]
-    target = ['mydata7']
+    target = ['mydata'] + ['mydata' + str(x) for x in range(3, 8)]
+    #target = ['mydata7']
 
     for f in target:
         with open(f+'/driving_log.csv') as csvfile:
@@ -100,7 +100,7 @@ def main():
                                          epochs=EPOCHS,
                                          callbacks=checkpointer,
                                          validation_data=validation_generator,
-                                         validation_steps=len(validation_samples))
+                                         validation_steps=len(validation_samples)//BATCH_SIZE)
 
     model.save('model.h5')
 

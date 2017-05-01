@@ -24,7 +24,7 @@ def data_augmentatation(df):
     指定したデータだけをaugmentationする
     """
     df['augment'] = np.zeros(len(df))
-    target_data = df.loc[(df.steering >= 0.04) | (df.steering <= -0.12)].copy()
+    target_data = df.loc[(df.steering >= 0.04) | (df.steering <= -0.015)].copy()
     target_data['augment'] = 1
 
     augmented_data = df.append(target_data, ignore_index=True)
