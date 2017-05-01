@@ -30,7 +30,8 @@ def main():
     BATCH_SIZE = 32
     samples = []
 
-    target = ['mydata'] + ['mydata' + str(x) for x in range(2, 7)]
+    #target = ['mydata'] + ['mydata' + str(x) for x in range(3, 8)]
+    target = ['mydata7']
 
     for f in target:
         with open(f+'/driving_log.csv') as csvfile:
@@ -41,11 +42,9 @@ def main():
 
     data = utilities.get_dataframe(samples)
     data = utilities.convert_to_float(data)
-    print(len(data))
     augmented_data = utilities.data_augmentatation(data)
-    print(len(augmented_data))
 
-    train_samples, validation_samples = train_test_split(augmented_data.as_matrix(), test_size=0.2)
+    train_samples, validation_samples = train_test_split(augmented_data.as_matrix().tolist(), test_size=0.2)
 
     # compile and train the model using the generator function
     train_generator = generator(train_samples, batch_size=BATCH_SIZE)
@@ -119,11 +118,11 @@ def generator(samples, batch_size=32, augmentation=0):
             angles = []
             for batch_sample in batch_samples:
                 # name = 'data/'+batch_sample[0]
-                filp = batch_sample[-1]
-                if filp == 0:
-                    name = batch_sample[0]
-                    center_image = cv2.imread(name)
-                    center_angle = batch_sample[3]
+                flip = batch_sample[-1]
+                name = batch_sample[0]
+                center_image = cv2.imread(name)
+                center_angle = batch_sample[3]
+                if flip == 0:
                     images.append(center_image)
                     angles.append(center_angle)
                 else:
