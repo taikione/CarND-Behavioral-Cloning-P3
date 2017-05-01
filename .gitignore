@@ -1,10 +1,14 @@
 data/
 mac_sim.app
 *.h5
+.idea
 models/
 mydata*/
 buckup/
 util.py
+histgram/
+get_steering_distribution.py
+
 # Created by https://www.gitignore.io/api/osx,linux,python
 
 ### Linux ###
