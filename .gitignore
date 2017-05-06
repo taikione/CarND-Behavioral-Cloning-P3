@@ -2,6 +2,7 @@ data/
 mac_sim.app
 .idea
 models/
+images/model.png
 *.h5
 mydata*/
 buckup/
