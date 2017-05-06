@@ -37,6 +37,7 @@ My project includes the following files:
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network
 * writeup_report.md summarizing the results
+* test.mp4 driving video
 
 #### 2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing. (Autonomous driving test)
@@ -48,30 +49,6 @@ python drive.py model.h5
 #### 3. Submission code is usable and readable
 
 The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
-
-<!--
-### Model Architecture and Training Strategy
-
-#### 1. An appropriate model architecture has been employed
-
-My model consists of a convolution neural network with 5x5 3x3 filter sizes and depths between 24, 36, 48 and 64 (model.py lines xx-xx).
-The model includes ELU layers (code line 20), and the input size is reduce to 1/4 (code line 18).
-
-#### 2. Attempts to reduce overfitting in the model
-The model contains Batch Normalization layers in order to reduce overfitting (model.py lines xx-xx). When a loss score has stopped decrease, reduce the leaning rate.
-
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 59, 60). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
-
-#### 3. Model parameter tuning
-
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
-
-#### 4. Appropriate training data
-
-Training data was chosen to keep the vehicle driving on the road from center camera. For details about how I created the training data, see the next section.
-I used a combination of center lane driving, recovering from the left and right sides of the road ...
--->
-
 
 ### Model Architecture and Training Strategy
 
