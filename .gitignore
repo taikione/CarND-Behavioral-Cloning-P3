@@ -3,7 +3,6 @@ examples/
 mac_sim.app
 .idea
 models/
-images/*
 *.h5
 mydata*/
 buckup/
