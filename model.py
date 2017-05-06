@@ -9,9 +9,8 @@ import utilities
 
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
-from keras.layers.core import Dense, Activation, Flatten, Lambda
+from keras.layers.core import Dense, Activation, Flatten
 from keras.layers.convolutional import Conv2D, Cropping2D
-from keras.layers.advanced_activations import ELU
 from keras.layers.pooling import MaxPooling2D
 from keras.optimizers import Adam
 from sklearn.utils import shuffle
@@ -26,20 +25,19 @@ import matplotlib.pyplot as plt
 
 def main():
 
-    EPOCHS = 10
+    EPOCHS = 15
     BATCH_SIZE = 32
     samples = []
 
-    target = ['mydata'] + ['mydata' + str(x) for x in range(3, 8)]
-    #target = ['mydata7']
+    target = ['mydata' + str(x) for x in range(2, 10)]
 
     for f in target:
         with open(f+'/driving_log.csv') as csvfile:
             reader = csv.reader(csvfile)
-            # fieldnames = next(reader)
             for line in reader:
                 samples.append(line)
 
+    # preprocessing to data augmentation
     data = utilities.get_dataframe(samples)
     data = utilities.convert_to_float(data)
     augmented_data = utilities.data_augmentatation(data)
@@ -51,7 +49,6 @@ def main():
     validation_generator = generator(validation_samples, batch_size=BATCH_SIZE)
 
     model = Sequential()
-    # Preprocess incoming data, centered around zero with small standard deviation
     # Resized 25x80
     model.add(Cropping2D(cropping=((50, 20), (0, 0)), input_shape=(160, 320, 3)))
     model.add(MaxPooling2D(pool_size=(2, 2), padding='valid'))
@@ -126,7 +123,7 @@ def generator(samples, batch_size=32, augmentation=0):
                     images.append(center_image)
                     angles.append(center_angle)
                 else:
-                    # added flipped images to data augmentation when steering absolute angle is over 3 degree
+                    # add flipped image
                     images.append(cv2.flip(center_image, 1))
                     angles.append(center_angle*-1.0)
 

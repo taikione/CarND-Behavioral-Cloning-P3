@@ -21,7 +21,7 @@ def convert_to_float(df):
 
 def data_augmentatation(df):
     """
-    指定したデータだけをaugmentationする
+    Augment data when steering angle is over 1 degree or under 0.3 degree
     """
     df['augment'] = np.zeros(len(df))
     target_data = df.loc[(df.steering >= 0.04) | (df.steering <= -0.015)].copy()
